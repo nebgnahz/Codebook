@@ -17,10 +17,12 @@ import (
 	"fmt"
 )
 
+var command = flag.String("help", "help", "Codebook is the tool to manage your passcode for all websites")
 var website = flag.String("website", "google", "the website you need to know your secret password")
 
 func main() {
-	x := cblib.NewPasscode(10)
+	x := cblib.NewPasscodeHard(15)
 	flag.Parse()
-	fmt.Println("are you looking for the password for ", *website, x)
+
+	fmt.Println("The password for", *website, "is", x)
 }
