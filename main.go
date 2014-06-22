@@ -17,12 +17,23 @@ import (
 	"fmt"
 )
 
-var command = flag.String("help", "help", "Codebook is the tool to manage your passcode for all websites")
-var website = flag.String("website", "google", "the website you need to know your secret password")
+var command = flag.String("command", "help", "Codebook is the tool to manage your passcode for all websites")
 
 func main() {
-	x := cblib.NewPasscodeHard(15)
 	flag.Parse()
-
-	fmt.Println("The password for", *website, "is", x)
+	switch *command {
+	case "help":
+		fmt.Println("TODO(benzh), print all available handlers")
+	case "new":
+		fmt.Println("Enter the website:")
+		var website, y_or_n string
+		_, _ = fmt.Scanf("%s", &website)
+		pc := cblib.NewPasscodeHard(15)
+		fmt.Println("The password for", website, "is", pc)
+		fmt.Println("Accept? (y/N):")
+		_, _ = fmt.Scanf("%s", &y_or_n)
+		if y_or_n == "y" {
+			cblib.CopyToClipBoard(pc)
+		}
+	}
 }
