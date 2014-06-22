@@ -24,6 +24,9 @@ func main() {
 	switch *command {
 	case "help":
 		fmt.Println("TODO(benzh), print all available handlers")
+	case "test":
+		c := cblib.Init("key")
+		fmt.Println(c)
 	case "new":
 		fmt.Println("Enter the website:")
 		var website, y_or_n string
