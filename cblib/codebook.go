@@ -2,6 +2,7 @@ package cblib
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -38,7 +39,19 @@ func Init(master_key string) *Codebook {
 			// parse the line
 			s := strings.TrimRight(string(line), "\n")
 			pair := strings.Split(s, ":")
-			kv := KV{key: pair[0], value: pair[1]}
+
+			master_key = Pad(master_key)
+
+			ciphertext := Encrypt([]byte(master_key), []byte("hello world"))
+			fmt.Println("==================")
+			fmt.Println(string(ciphertext))
+
+			value := Decrypt([]byte(master_key), []byte(ciphertext))
+			fmt.Println("------------------")
+
+			fmt.Println(string(value))
+
+			kv := KV{key: pair[0], value: value}
 			m.codes = append(m.codes, kv)
 		}
 	}
