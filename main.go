@@ -26,7 +26,12 @@ func main() {
 		fmt.Println("TODO(benzh), print all available handlers")
 	case "test":
 		c := cblib.Init("key")
+		c.Add("baidu.com", cblib.NewPasscodeHard(15))
+		c.Save()
 		fmt.Println(c)
+	case "print":
+		c := cblib.Init("key")
+		c.PrintPlain()
 	case "new":
 		fmt.Println("Enter the website:")
 		var website, y_or_n string

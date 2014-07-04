@@ -5,6 +5,12 @@ import (
 	"os/exec"
 )
 
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
 func CopyToClipBoard(str string) {
 	// uses Mac OS shell command pbcopy
 	c1 := exec.Command("echo", str)
