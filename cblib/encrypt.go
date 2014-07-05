@@ -54,11 +54,11 @@ func Decrypt(key, text []byte) string {
 		panic(err)
 	}
 	if len(text) < aes.BlockSize {
-		panic("ciphertext too short")
+		panic(string(text) + " ciphertext too short")
 	}
 	iv := text[:aes.BlockSize]
 	text = text[aes.BlockSize:]
 	cfb := cipher.NewCFBDecrypter(block, iv)
 	cfb.XORKeyStream(text, text)
-	return string(decodeBase64(string(text)))
+	return string(text)
 }

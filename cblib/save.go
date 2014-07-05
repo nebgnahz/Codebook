@@ -17,5 +17,9 @@ func (c *Codebook) Save() {
 		check(err)
 		_, err = f.Write([]byte(kv.value))
 		check(err)
+		f.Write([]byte("\n"))
+		check(err)
 	}
+	f.Write([]byte("done"))
+
 }

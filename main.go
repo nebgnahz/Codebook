@@ -15,13 +15,44 @@ import (
 	"codebook/cblib"
 	"flag"
 	"fmt"
+	"os"
 )
 
-var command = flag.String("command", "help", "Codebook is the tool to manage your passcode for all websites")
+const (
+	VERSION = "0.1"
+)
+
+func PrintUsage() {
+	fmt.Print(
+		`usage: codebook [--version] [--help] <command> [<args>]
+
+The most common codebook commands are:
+  new      generate a random password for the new website
+  add      manually add another entry for the website
+     
+`)
+}
 
 func main() {
+	if len(os.Args) < 2 {
+		PrintUsage()
+		return
+	}
+
+	// flag parsing
+	var help = flag.Bool("help", false, "Codebook is the tool to manage your passcode for all websites.")
+	var version = flag.Bool("version", false, "")
 	flag.Parse()
-	switch *command {
+
+	if *help {
+		PrintUsage()
+		return
+	} else if *version {
+		fmt.Println(VERSION)
+		return
+	}
+
+	switch os.Args[1] {
 	case "help":
 		fmt.Println("TODO(benzh), print all available handlers")
 	case "test":
