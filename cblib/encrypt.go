@@ -8,24 +8,24 @@ import (
 	"io"
 )
 
-func Pad(text string) string {
-	if len(text) > aes.BlockSize {
-		return text
+func KeyNormalize(key []byte) []byte {
+	// KeyNormalize will
+	//   1, pad the key if length too small
+	//   2, truncate the key if length too large
+	if len(key) > aes.BlockSize {
+		return key[0:aes.BlockSize]
 	}
-	length := aes.BlockSize - (len(text) % aes.BlockSize)
-	pad := string(length)
-	for i := 0; i < length; i++ {
-		text += pad
-	}
-	return text
+	new_key := make([]byte, aes.BlockSize, aes.BlockSize)
+	copy(new_key, key)
+	return new_key
 }
 
-func encodeBase64(b []byte) string {
-	return base64.StdEncoding.EncodeToString(b)
+func EncodeBase64(b []byte) []byte {
+	return []byte(base64.StdEncoding.EncodeToString(b))
 }
 
-func decodeBase64(s string) []byte {
-	data, err := base64.StdEncoding.DecodeString(s)
+func DecodeBase64(b []byte) []byte {
+	data, err := base64.StdEncoding.DecodeString(string(b))
 	if err != nil {
 		panic(err)
 	}
@@ -37,28 +37,28 @@ func Encrypt(key, text []byte) []byte {
 	if err != nil {
 		panic(err)
 	}
-	b := encodeBase64(text)
+	b := EncodeBase64(text)
 	ciphertext := make([]byte, aes.BlockSize+len(b))
 	iv := ciphertext[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		panic(err)
 	}
 	cfb := cipher.NewCFBEncrypter(block, iv)
-	cfb.XORKeyStream(ciphertext[aes.BlockSize:], []byte(b))
+	cfb.XORKeyStream(ciphertext[aes.BlockSize:], b)
 	return ciphertext
 }
 
-func Decrypt(key, text []byte) string {
+func Decrypt(key, text []byte) []byte {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		panic(err)
 	}
 	if len(text) < aes.BlockSize {
-		panic(string(text) + " ciphertext too short")
+		panic("ciphertext too short")
 	}
 	iv := text[:aes.BlockSize]
 	text = text[aes.BlockSize:]
 	cfb := cipher.NewCFBDecrypter(block, iv)
 	cfb.XORKeyStream(text, text)
-	return string(text)
+	return DecodeBase64(text)
 }

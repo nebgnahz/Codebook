@@ -23,7 +23,6 @@ const (
 )
 
 func Init(master_key string) *Codebook {
-	master_key = Pad(master_key)
 
 	m := &Codebook{masterkey: master_key}
 	m.codes = make([]KV, 0)
