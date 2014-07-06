@@ -29,7 +29,8 @@ func PrintUsage() {
 The most common codebook commands are:
   new      generate a random password for the new website
   add      manually add another entry for the website
-     
+  set      manually set the password for a website
+  get      return the password for a specific website   
 `)
 }
 
@@ -39,27 +40,23 @@ func main() {
 		return
 	}
 
-	// flag parsing
-	var help = flag.Bool("help", false, "Codebook is the tool to manage your passcode for all websites.")
-	var version = flag.Bool("version", false, "")
-	flag.Parse()
-
-	if *help {
-		PrintUsage()
-		return
-	} else if *version {
-		fmt.Println(VERSION)
+	if FlagParsing() {
 		return
 	}
 
+	fmt.Println("Enter master key (recommended shorter than 16 bytes):")
+	var master_key string
+	_, _ = fmt.Scanf("%s", &master_key)
+	c := cblib.Init(master_key)
+
 	switch os.Args[1] {
-	case "help":
-		fmt.Println("TODO(benzh), print all available handlers")
-	case "test":
-		c := cblib.Init("key")
-		c.Add([]byte("baidu.com"), cblib.NewPasscodeHard(15))
-		c.Save()
-		c.PrintPlain()
+	case "get":
+		pwd := make([]byte, 0)
+		if c.Get([]byte(os.Args[2]), pwd) {
+			fmt.Println(pwd)
+		} else {
+			fmt.Println(os.Args[2], "not found")
+		}
 	case "new":
 		fmt.Println("Enter the website:")
 		var website, y_or_n string
@@ -72,4 +69,21 @@ func main() {
 			cblib.CopyToClipBoard(string(pc))
 		}
 	}
+}
+
+func FlagParsing() bool {
+	// flag parsing
+	var help = flag.Bool("help", false, "Codebook is the tool to manage your passcode for all websites.")
+	var version = flag.Bool("version", false, "")
+
+	flag.Parse()
+
+	if *help {
+		PrintUsage()
+		return true
+	} else if *version {
+		fmt.Println(VERSION)
+		return true
+	}
+	return false
 }

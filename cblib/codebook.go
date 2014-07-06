@@ -14,7 +14,7 @@ type Codebook struct {
 }
 
 const (
-	CodebookFile = "/tmp/.codebook"
+	CodebookFile = "~/.codebook"
 )
 
 func Init(master_key string) *Codebook {
