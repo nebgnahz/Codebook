@@ -12,6 +12,7 @@
 package main
 
 import (
+	"bytes"
 	"code.google.com/p/gopass"
 	"codebook/cblib"
 	"flag"
@@ -32,6 +33,7 @@ The most common codebook commands are:
   add <website>             manually add another entry for the website
   set <website> <password>  manually set the password for a website
   get <website>             return the password for a specific website   
+  get all                   return everything
 `)
 }
 
@@ -57,6 +59,10 @@ func main() {
 
 	switch command {
 	case "get":
+		if bytes.Equal(website, []byte("all")) {
+			c.PrintPlain()
+			return
+		}
 		if pwd, err := c.Get(website); err == nil {
 			fmt.Println(string(pwd))
 		} else {
@@ -82,7 +88,7 @@ func main() {
 				// cblib.CopyToClipBoard(string(new_code))
 			}
 		}
-	}	
+	}
 }
 
 func FlagParsing() bool {

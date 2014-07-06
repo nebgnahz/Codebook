@@ -2,7 +2,8 @@ package cblib
 
 import (
 	"bytes"
-	"fmt"
+	"crypto/sha1"
+	"log"
 	"os"
 )
 
@@ -17,8 +18,19 @@ func (c *Codebook) Load() {
 
 		data := make([]byte, 1000)
 		if count, err := f.Read(data); err == nil {
-			fmt.Printf("read %d bytes: %q\n", count, data[:count])
-			for _, entry := range bytes.Split(data[:count], []byte("\n")) {
+			// log.Println("read", count, "bytes:", data[:count])
+			for i, entry := range bytes.Split(data[:count], []byte("\n")) {
+
+				// first line being sha1 sum
+				sha := sha1.Sum(c.masterkey)
+				if i == 0 {
+					if bytes.Equal(sha[:len(sha)], DecodeBase64(entry)) {
+						continue
+					} else {
+						panic("master key doens't match")
+					}
+				}
+
 				if bytes.Index(entry, []byte(":")) == -1 {
 					break
 				}

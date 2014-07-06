@@ -18,7 +18,6 @@ func (c *Codebook) Get(website []byte) ([]byte, error) {
 }
 
 func (c *Codebook) PrintPlain() {
-	// for now, let's just iterate through the codes
 	for _, kv := range c.codes {
 		decrypted := Decrypt(c.masterkey, kv.value)
 		fmt.Println(
@@ -26,5 +25,11 @@ func (c *Codebook) PrintPlain() {
 			string(kv.key),
 			" | value:",
 			string(decrypted))
+	}
+}
+
+func (c *Codebook) PrintKeys() {
+	for _, kv := range c.codes {
+		fmt.Println(string(kv.key))
 	}
 }
