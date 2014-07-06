@@ -6,8 +6,8 @@ package cblib
 // 3, clean up
 
 import (
-	"os/exec"
 	"bytes"
+	"os/exec"
 	"testing"
 )
 
@@ -21,7 +21,7 @@ var expected = make([]KV, 0)
 func TestLoading(t *testing.T) {
 	GenerateNewFile()
 	c := LoadFromFile()
-	
+
 	// Make comparison
 	for i, kv := range c.codes {
 		decrypted := Decrypt(c.masterkey, kv.value)
@@ -33,7 +33,7 @@ func TestLoading(t *testing.T) {
 			)
 		}
 	}
-	
+
 	CleanUp()
 }
 

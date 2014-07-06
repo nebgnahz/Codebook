@@ -2,8 +2,8 @@ package cblib
 
 import (
 	"bytes"
-	"fmt"
 	"errors"
+	"fmt"
 )
 
 func (c *Codebook) Get(website []byte) ([]byte, error) {

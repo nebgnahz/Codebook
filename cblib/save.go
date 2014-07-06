@@ -16,7 +16,7 @@ func (c *Codebook) Save() {
 	check(err)
 	_, err = f.Write([]byte("\n"))
 	check(err)
-	
+
 	for _, kv := range c.codes {
 		// format being: key:value
 		_, err := f.Write(kv.key)

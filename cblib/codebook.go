@@ -1,6 +1,8 @@
 package cblib
 
-import ("os")
+import (
+	"os"
+)
 
 type KV struct {
 	key   []byte

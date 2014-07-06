@@ -2,8 +2,8 @@ package cblib
 
 import (
 	"io"
-	"runtime"
 	"os/exec"
+	"runtime"
 )
 
 func check(e error) {
