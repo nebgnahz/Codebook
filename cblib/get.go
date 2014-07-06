@@ -1,13 +1,14 @@
 package cblib
 
 import (
+	"bytes"
 	"fmt"
 )
 
-func (c *Codebook) Get(website string) bool {
+func (c *Codebook) Get(website []byte) bool {
 	// for now, let's just iterate through the codes
 	for _, kv := range c.codes {
-		if kv.key == website {
+		if bytes.Equal(kv.key, website) {
 			return true
 		}
 	}

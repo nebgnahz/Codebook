@@ -11,23 +11,23 @@ const (
 	Symbols string = ",.!@#$%^&*()"
 )
 
-func NewPasscodeEasy(length int) string {
+func NewPasscodeEasy(length int) []byte {
 	return randomStringsFromStrings(Numbers+letters, length)
 }
 
-func NewPasscodeNormal(length int) string {
+func NewPasscodeNormal(length int) []byte {
 	return randomStringsFromStrings(Numbers+LETTERS+letters, length)
 }
 
-func NewPasscodeHard(length int) string {
+func NewPasscodeHard(length int) []byte {
 	return randomStringsFromStrings(Numbers+LETTERS+letters+Symbols, length)
 }
 
-func randomStringsFromStrings(in string, length int) string {
+func randomStringsFromStrings(in string, length int) []byte {
 	var bytes = make([]byte, length)
 	rand.Read(bytes)
 	for i, b := range bytes {
 		bytes[i] = in[b%byte(len(in))]
 	}
-	return string(bytes)
+	return bytes
 }

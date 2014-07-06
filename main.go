@@ -57,11 +57,8 @@ func main() {
 		fmt.Println("TODO(benzh), print all available handlers")
 	case "test":
 		c := cblib.Init("key")
-		c.Add("baidu.com", cblib.NewPasscodeHard(15))
+		c.Add([]byte("baidu.com"), cblib.NewPasscodeHard(15))
 		c.Save()
-		fmt.Println(c)
-	case "print":
-		c := cblib.Init("key")
 		c.PrintPlain()
 	case "new":
 		fmt.Println("Enter the website:")
@@ -72,7 +69,7 @@ func main() {
 		fmt.Println("Accept? (y/N):")
 		_, _ = fmt.Scanf("%s", &y_or_n)
 		if y_or_n == "y" {
-			cblib.CopyToClipBoard(pc)
+			cblib.CopyToClipBoard(string(pc))
 		}
 	}
 }
