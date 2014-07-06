@@ -6,7 +6,6 @@ import (
 	"os"
 )
 
-
 // Load will read the file and parse it
 func (c *Codebook) Load() {
 	c.codes = make([]KV, 0)
@@ -25,11 +24,11 @@ func (c *Codebook) Load() {
 				}
 				pair := bytes.SplitN(entry, []byte(":"), 2)
 				kv := KV{
-					key: pair[0],
+					key:   pair[0],
 					value: DecodeBase64(pair[1]),
 				}
 				c.codes = append(c.codes, kv)
 			}
-		}		
+		}
 	}
 }

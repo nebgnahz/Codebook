@@ -5,8 +5,8 @@ package cblib
 
 import (
 	"bytes"
-	"testing"
 	"fmt"
+	"testing"
 )
 
 const (
@@ -19,7 +19,7 @@ var expected = make([]KV, 0)
 func TestLoading(t *testing.T) {
 	GenerateNewFile()
 	c := LoadFromFile()
-	
+
 	for i, kv := range c.codes {
 		decrypted := Decrypt(c.masterkey, kv.value)
 		if !bytes.Equal(kv.key, expected[i].key) ||
