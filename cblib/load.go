@@ -3,7 +3,6 @@ package cblib
 import (
 	"bytes"
 	"crypto/sha1"
-	"log"
 	"os"
 )
 

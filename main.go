@@ -73,8 +73,7 @@ func main() {
 				// when we add, it's encrypted
 				c.Add(website, new_code)
 				c.Save()
-				// only invoke when under OSX environment
-				// cblib.CopyToClipBoard(string(new_code))
+				cblib.CopyToClipBoard(string(new_code))
 			}
 		}
 	}
