@@ -1,11 +1,13 @@
 package cblib
 
 // A medium size system testing
-// 1, we generate new keys and save them into storage
+// 1, we generate new keys and save them into temporary files
+// 2, we read the temporary file and parse it to compare the value
+// 3, clean up
 
 import (
+	"os/exec"
 	"bytes"
-	"fmt"
 	"testing"
 )
 
@@ -19,7 +21,8 @@ var expected = make([]KV, 0)
 func TestLoading(t *testing.T) {
 	GenerateNewFile()
 	c := LoadFromFile()
-
+	
+	// Make comparison
 	for i, kv := range c.codes {
 		decrypted := Decrypt(c.masterkey, kv.value)
 		if !bytes.Equal(kv.key, expected[i].key) ||
@@ -30,6 +33,8 @@ func TestLoading(t *testing.T) {
 			)
 		}
 	}
+	
+	CleanUp()
 }
 
 func GenerateNewFile() {
@@ -57,4 +62,9 @@ func LoadFromFile() *Codebook {
 	}
 	c.Load()
 	return c
+}
+
+func CleanUp() {
+	c1 := exec.Command("rm", TmpCodebookFile)
+	c1.Start()
 }
