@@ -54,6 +54,7 @@ func main() {
 		}
 		if pwd, err := c.Get(website); err == nil {
 			fmt.Println(string(pwd))
+			cblib.CopyToClipBoard(string(new_code))
 		} else {
 			panic(err)
 		}
