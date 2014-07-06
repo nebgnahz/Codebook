@@ -1,6 +1,6 @@
 package cblib
 
-import ()
+import ("os")
 
 type KV struct {
 	key   []byte
@@ -14,13 +14,14 @@ type Codebook struct {
 }
 
 const (
-	CodebookFile = "~/.codebook"
+	CodebookFile = ".codebook"
 )
 
 func Init(master_key string) *Codebook {
+	filepath := os.Getenv("HOME") + "/" + CodebookFile
 	c := &Codebook{
 		masterkey: KeyNormalize([]byte(master_key)),
-		bookfile:  CodebookFile,
+		bookfile:  filepath,
 	}
 	c.Load()
 	return c

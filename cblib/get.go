@@ -3,17 +3,18 @@ package cblib
 import (
 	"bytes"
 	"fmt"
+	"errors"
 )
 
-func (c *Codebook) Get(website, pwd []byte) bool {
+func (c *Codebook) Get(website []byte) ([]byte, error) {
 	// for now, let's just iterate through the codes
 	for _, kv := range c.codes {
 		if bytes.Equal(kv.key, website) {
-			pwd = Decrypt(c.masterkey, kv.value)
-			return true
+			pwd := Decrypt(c.masterkey, kv.value)
+			return pwd, nil
 		}
 	}
-	return false
+	return nil, errors.New("website not found")
 }
 
 func (c *Codebook) PrintPlain() {

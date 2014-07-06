@@ -12,6 +12,7 @@
 package main
 
 import (
+	"code.google.com/p/gopass"
 	"codebook/cblib"
 	"flag"
 	"fmt"
@@ -27,15 +28,15 @@ func PrintUsage() {
 		`usage: codebook [--version] [--help] <command> [<args>]
 
 The most common codebook commands are:
-  new      generate a random password for the new website
-  add      manually add another entry for the website
-  set      manually set the password for a website
-  get      return the password for a specific website   
+  new <website>             generate a random password for the new website
+  add <website>             manually add another entry for the website
+  set <website> <password>  manually set the password for a website
+  get <website>             return the password for a specific website   
 `)
 }
 
 func main() {
-	if len(os.Args) < 2 {
+	if len(os.Args) < 3 {
 		PrintUsage()
 		return
 	}
@@ -44,31 +45,44 @@ func main() {
 		return
 	}
 
-	fmt.Println("Enter master key (recommended shorter than 16 bytes):")
-	var master_key string
-	_, _ = fmt.Scanf("%s", &master_key)
-	c := cblib.Init(master_key)
+	master_key, err := gopass.GetPass(
+		"Enter master key (recommended shorter than 16 bytes):")
+	if err != nil {
+		panic(err)
+	}
 
-	switch os.Args[1] {
+	c := cblib.Init(master_key)
+	command := os.Args[1]
+	website := []byte(os.Args[2])
+
+	switch command {
 	case "get":
-		pwd := make([]byte, 0)
-		if c.Get([]byte(os.Args[2]), pwd) {
-			fmt.Println(pwd)
+		if pwd, err := c.Get(website); err == nil {
+			fmt.Println(string(pwd))
 		} else {
-			fmt.Println(os.Args[2], "not found")
+			panic(err)
 		}
 	case "new":
-		fmt.Println("Enter the website:")
-		var website, y_or_n string
-		_, _ = fmt.Scanf("%s", &website)
-		pc := cblib.NewPasscodeHard(15)
-		fmt.Println("The password for", website, "is", pc)
-		fmt.Println("Accept? (y/N):")
-		_, _ = fmt.Scanf("%s", &y_or_n)
-		if y_or_n == "y" {
-			cblib.CopyToClipBoard(string(pc))
+		var y_or_n string
+		if pwd, err := c.Get(website); err == nil {
+			fmt.Println(pwd)
+			fmt.Println("Password already exists for", string(website))
+		} else {
+			new_code := cblib.NewPasscodeHard(15)
+			fmt.Println(
+				"The password for", string(website),
+				"is", string(new_code),
+				"\nAccept? (y/N):")
+			_, _ = fmt.Scanf("%s", &y_or_n)
+			if y_or_n != "N" || y_or_n != "n" {
+				// when we add, it's encrypted
+				c.Add(website, new_code)
+				c.Save()
+				// only invoke when under OSX environment
+				// cblib.CopyToClipBoard(string(new_code))
+			}
 		}
-	}
+	}	
 }
 
 func FlagParsing() bool {
