@@ -15,7 +15,9 @@ func (c *Codebook) Load() {
 		f, _ := os.Open(c.bookfile)
 		defer f.Close()
 
-		data := make([]byte, 1000)
+		// TODO(benzh) Fix this, the read to data is not scalable to handle large
+		// files.
+		data := make([]byte, 50000)
 		if count, err := f.Read(data); err == nil {
 			// log.Println("read", count, "bytes:", data[:count])
 			for i, entry := range bytes.Split(data[:count], []byte("\n")) {
@@ -34,6 +36,7 @@ func (c *Codebook) Load() {
 					break
 				}
 				pair := bytes.SplitN(entry, []byte(":"), 2)
+
 				kv := KV{
 					key:   pair[0],
 					value: DecodeBase64(pair[1]),
