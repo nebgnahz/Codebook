@@ -10,34 +10,53 @@ import (
 )
 
 const (
-	VERSION = "0.2"
+	VERSION = "0.3"
 )
 
-func PrintUsage() {
-	fmt.Print(
-		`usage: codebook [--version] [--help] <command> [<args>]
+func printUsage() {
+	help := "\nUsage: codebook [--version] [--help] <command> [<args>]\n" +
+		"\nPassword Management Tools Simplified.\n\nCommands:\n"
 
-The most common codebook commands are:
-  new <website>             generate a random password for the new website
-  add <website>             manually add another entry for the website
-  set <website> <password>  manually set the password for a website
-  get <website>             return the password for a specific website   
-  get all                   return everything
-`)
+	for _, command := range [][]string{
+		{"new <website>", "Generate A New Random Password for <website>"},
+		{"set <website> <password>", "Set <password> for <website>"},
+		{"get <website>", "Get the password for <website>"},
+		{"get all", "Get the password for all stored websites"},
+	} {
+		help += fmt.Sprintf("    %-30.300s%s\n", command[0], command[1])
+	}
+	fmt.Fprintf(os.Stdout, "%s\n", help)
+}
+
+func parseFlags() bool {
+	// flag parsing
+	var help = flag.Bool("help", false, "Codebook is the tool to manage your passcode for all websites.")
+	var version = flag.Bool("version", false, "")
+
+	flag.Parse()
+
+	if *help {
+		printUsage()
+		return true
+	} else if *version {
+		fmt.Println(VERSION)
+		return true
+	}
+	return false
 }
 
 func main() {
-	if len(os.Args) < 3 {
-		PrintUsage()
+	if len(os.Args) < 2 {
+		printUsage()
 		return
 	}
 
-	if FlagParsing() {
+	if parseFlags() {
 		return
 	}
 
 	master_key, err := gopass.GetPass(
-		"Enter master key (recommended shorter than 16 bytes):")
+		"Enter master key (recommended shorter than 16 bytes): ")
 	if err != nil {
 		panic(err)
 	}
@@ -78,21 +97,4 @@ func main() {
 			}
 		}
 	}
-}
-
-func FlagParsing() bool {
-	// flag parsing
-	var help = flag.Bool("help", false, "Codebook is the tool to manage your passcode for all websites.")
-	var version = flag.Bool("version", false, "")
-
-	flag.Parse()
-
-	if *help {
-		PrintUsage()
-		return true
-	} else if *version {
-		fmt.Println(VERSION)
-		return true
-	}
-	return false
 }
