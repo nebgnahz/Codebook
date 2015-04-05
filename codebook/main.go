@@ -14,12 +14,11 @@ const (
 )
 
 func printUsage() {
-	help := "\nUsage: codebook [--version] [--help] <command> [<args>]\n" +
+	help := "Usage: codebook [--version] [--help] <command> [<args>]\n" +
 		"\nPassword Management Tools Simplified.\n\nCommands:\n"
 
 	for _, command := range [][]string{
-		{"new <website>", "Generate A New Random Password for <website>"},
-		{"set <website> <password>", "Set <password> for <website>"},
+		{"new <website>", "Generate a new random password for <website>"},
 		{"get <website>", "Get the password for <website>"},
 		{"get all", "Get the password for all stored websites"},
 	} {
