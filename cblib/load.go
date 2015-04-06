@@ -3,6 +3,7 @@ package cblib
 import (
 	"bytes"
 	"crypto/sha1"
+	"log"
 	"os"
 )
 
@@ -28,7 +29,7 @@ func (c *Codebook) Load() {
 					if bytes.Equal(sha[:len(sha)], DecodeBase64(entry)) {
 						continue
 					} else {
-						panic("master key doens't match")
+						log.Fatal("master key doens't match")
 					}
 				}
 
